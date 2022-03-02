@@ -8,8 +8,6 @@ use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Str;
-
-
 use Inertia\Inertia;
 
 class CastController extends Controller
@@ -63,6 +61,6 @@ class CastController extends Controller
     public function destroy(Cast $cast)
     {
         $cast->delete();
-        return Redirect::back()->with('flash.banner', 'Cast Deleted.');
+        return Redirect::route('admin.casts.index')->with('flash.banner', 'Cast Delete.');
     }
 }

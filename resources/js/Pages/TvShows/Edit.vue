@@ -1,26 +1,23 @@
 <template>
     <admin-layout title="Dashboard">
         <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Casts Edit
-            </h2>
+                Tv Shows Edit
         </template>
-
         <div class="py-12">
             <div class="max-w-7xl mx-auto">
                 <section class="container mx-auto p-6 font-mono">
                     <div class="w-full flex mb-4 p-2">
                         <Link
-                            :href="route('admin.casts.index')"
+                            :href="route('admin.tv-shows.index')"
                             class="bg-green-500 hover:bg-green-700 text-white px-4 py-2 rounded-lg"
                         >
-                            Cast Index
+                            Tv Show Index
                         </Link>
                     </div>
                     <div
                         class="w-full mb-8 p-6 sm:max-w-md overflow-hidden bg-white rounded-lg shadow-lg"
                     >
-                        <form @submit.prevent="submitCast">
+                        <form @submit.prevent="submitTvShow">
                             <div>
                                 <jet-label for="name" value="Name" />
                                 <jet-input
@@ -75,14 +72,14 @@ import JetLabel from "@/Jetstream/Label.vue";
 import JetButton from "@/Jetstream/Button.vue";
 
 const props = defineProps({
-    cast: Object,
+    tvShow: Object,
 });
 const form = useForm({
-    name: props.cast.name,
-    poster_path: props.cast.poster_path,
+    name: props.tvShow.name,
+    poster_path: props.tvShow.poster_path,
 });
-function submitCast() {
-    form.put("/admin/casts/" + props.cast.id);
+function submitTvShow() {
+    form.put("/admin/tv-shows/" + props.tvShow.id);
 }
 </script>
 

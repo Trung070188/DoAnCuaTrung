@@ -1,50 +1,41 @@
 <template>
     <admin-layout title="Dashboard">
         <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                genres Index
-            </h2>
+                Tv Show Index
         </template>
-
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <section class="container mx-auto p-6 font-mono">
                     <div class="w-full flex mb-4 p-2 justify-end">
-                        <form
+ <form
                             class="flex space-x-4 shadow bg-white rounded-md m-2 p-2"
                         >
+                            <div class="p-1 flex items-center">
+                                <label
+                                    for="tmdb_id_g"
+                                    class="block text-sm font-medium text-gray-700 mr-4"
+                                    >tvShow Tmdb Id</label
+                                >
+                                <div class="relative rounded-md shadow-sm">
+                                    <input
+                                        v-model="tvShowTMDBId"
+                                        id="tmdb_id_g"
+                                        name="tmdb_id_g"
+                                        class="px-3 py-2 border border-gray-300 rounded"
+                                        placeholder="Cast ID"
+                                    />
+                                </div>
+                            </div>
                             <div class="p-1">
                                 <button
                                     type="button"
-                                    @click="generateGenres"
+                                    @click="generateTvShow"
                                     class="inline-flex items-center justify-center py-2 px-4 border border-transparent text-base leading-6 font-medium rounded-md text-white bg-green-600 hover:bg-green-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-green-700 transition duration-150 ease-in-out disabled:opacity-50"
                                 >
-                                    <svg
-                                        v-if="showSpinner"
-                                        class="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        fill="none"
-                                        viewBox="0 0 24 24"
-                                    >
-                                        <circle
-                                            class="opacity-25"
-                                            cx="12"
-                                            cy="12"
-                                            r="10"
-                                            stroke="currentColor"
-                                            stroke-width="4"
-                                        ></circle>
-                                        <path
-                                            class="opacity-75"
-                                            fill="currentColor"
-                                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                                        ></path>
-                                    </svg>
                                     <span>Generate</span>
                                 </button>
                             </div>
-                        </form>
-                    </div>
+                        </form>                    </div>
                     <div
                         class="w-full mb-8 overflow-hidden bg-white rounded-lg shadow-lg"
                     >
@@ -78,7 +69,7 @@
                                 <div class="flex">
                                     <select
                                         v-model="perPage"
-                                        @change="getGenres"
+                                        @change="getTvShows"
                                         class="px-4 py-3 w-full rounded-md bg-gray-100 border-transparent focus:border-gray-500 focus:bg-white focus:ring-0 text-sm"
                                     >
                                         <option value="5">5 Per Page</option>
@@ -92,23 +83,25 @@
                         <div class="w-full overflow-x-auto">
                             <Table>
                                 <template #tableHead>
-                                    <TableHead>Title</TableHead>
+                                    <TableHead>Name</TableHead>
                                     <TableHead>Slug</TableHead>
+                                    <TableHead>Poster</TableHead>
                                     <TableHead>Manage</TableHead>
                                 </template>
                                 <TableRow
-                                    v-for="genre in genres.data"
-                                    :key="genre.id"
+                                    v-for="tvShow in tvShows.data"
+                                    :key="tvShow.id"
                                 >
-                                    <TableData>{{ genre.title }}</TableData>
-                                    <TableData>{{ genre.slug }}</TableData>
+                                    <TableData>{{ tvShow.name }}</TableData>
+                                    <TableData>{{ tvShow.slug }}</TableData>
+                                    <TableData>{{ tvShow.poster_path }}</TableData>
                                     <TableData>
                                         <div class="flex justify-around">
                                             <ButtonLink
                                                 :link="
                                                     route(
-                                                        'admin.genres.edit',
-                                                        genre.id
+                                                        'admin.tv-shows.edit',
+                                                        tvShow.id
                                                     )
                                                 "
                                                 >Edit</ButtonLink
@@ -117,8 +110,8 @@
                                                 class="bg-red-500 hover:bg-red-700"
                                                 :link="
                                                     route(
-                                                        'admin.genres.destroy',
-                                                        genre.id
+                                                        'admin.tv-shows.destroy',
+                                                        tvShow.id
                                                     )
                                                 "
                                                 method="delete"
@@ -130,8 +123,8 @@
                                     </TableData>
                                 </TableRow>
                             </Table>
-                            <div class="m-2 p-2" v-if="genres.data.length">
-                                <Pagination :links="genres.links" />
+                            <div class="m-2 p-2" >
+                                <Pagination :links="tvShows.links" />
                             </div>
                         </div>
                     </div>
@@ -154,15 +147,15 @@ import TableData from "@/Components/TableData";
 import ButtonLink from "@/Components/ButtonLink";
 
 const props = defineProps({
-    genres: Object,
+    tvShows: Object,
     filters: Object,
 });
 const search = ref(props.filters.search);
 const perPage = ref(props.filters.perPage);
-const showSpinner = ref(false);
+const tvShowTMDBId=ref("");
 watch(search, (value) => {
     Inertia.get(
-        "/admin/genres",
+        "/admin/tv-shows",
         { search: value, perPage: perPage.value },
         {
             preserveState: true,
@@ -170,9 +163,9 @@ watch(search, (value) => {
         }
     );
 });
-function getGenres() {
+function getTvShows() {
     Inertia.get(
-        "/admin/genres",
+        "/admin/tv-shows",
         { perPage: perPage.value, search: search.value },
         {
             preserveState: true,
@@ -180,16 +173,11 @@ function getGenres() {
         }
     );
 }
-function generateGenres() {
-    Inertia.post(
-        "/admin/genres",
-        {},
-        {
-            onStart: () => (showSpinner.value = true),
-            onFinish: () => (showSpinner.value = false),
-        }
+function generateTvShow() {
+    Inertia.post("/admin/tv-shows", { tvShowTMDBId: tvShowTMDBId.value },{
+        onFinish: ()=>(tvShowTMDBId.value=""),
+    }
     );
 }
-</script>
 
-<style></style>
+</script>

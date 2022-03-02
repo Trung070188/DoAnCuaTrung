@@ -1,51 +1,35 @@
 <template>
     <admin-layout title="Dashboard">
-        <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Casts Edit
-            </h2>
+        <template #header>          
+                Genres Edit
         </template>
-
         <div class="py-12">
             <div class="max-w-7xl mx-auto">
                 <section class="container mx-auto p-6 font-mono">
                     <div class="w-full flex mb-4 p-2">
                         <Link
-                            :href="route('admin.casts.index')"
+                            :href="route('admin.genres.index')"
                             class="bg-green-500 hover:bg-green-700 text-white px-4 py-2 rounded-lg"
                         >
-                            Cast Index
+                            Genre Index
                         </Link>
                     </div>
                     <div
                         class="w-full mb-8 p-6 sm:max-w-md overflow-hidden bg-white rounded-lg shadow-lg"
                     >
-                        <form @submit.prevent="submitCast">
+                        <form @submit.prevent="submitGenre">
                             <div>
-                                <jet-label for="name" value="Name" />
+                                <jet-label for="title" value="Title" />
                                 <jet-input
-                                    id="name"
+                                    id="title"
                                     type="text"
                                     class="mt-1 block w-full"
-                                    v-model="form.name"
+                                    v-model="form.title"
                                     autofocus
-                                    autocomplete="name"
+                                    autocomplete="title"
                                 />
-                                <div class="text-dm text-red-400" v-if="form.errors.name">
-                                    {{ form.errors.name }}
-                                </div>
-                            </div>
-
-                            <div class="mt-4">
-                                <jet-label for="poster_path" value="Poster" />
-                                <jet-input
-                                    id="poster_path"
-                                    type="text"
-                                    class="mt-1 block w-full"
-                                    v-model="form.poster_path"
-                                />
-                                <div class="text-sm text-red-400" v-if="form.errors.poster_path">
-                                    {{ form.errors.poster_path }}
+                                <div class="text-dm text-red-400" v-if="form.errors.title">
+                                    {{ form.errors.title }}
                                 </div>
                             </div>
 
@@ -75,14 +59,13 @@ import JetLabel from "@/Jetstream/Label.vue";
 import JetButton from "@/Jetstream/Button.vue";
 
 const props = defineProps({
-    cast: Object,
+    genre: Object,
 });
 const form = useForm({
-    name: props.cast.name,
-    poster_path: props.cast.poster_path,
+    title: props.genre.title,
 });
-function submitCast() {
-    form.put("/admin/casts/" + props.cast.id);
+function submitGenre() {
+    form.put("/admin/genres/" + props.genre.id);
 }
 </script>
 

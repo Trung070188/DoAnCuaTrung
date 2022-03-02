@@ -8,4 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class Genre extends Model
 {
     use HasFactory;
+    protected $fillable=['tmdb_id','title','slug'];
+    public function setTitleAttribute($value)
+    {
+        $this->attributes['title']=$value;
+        $this->attributes['slug']=$value;
+    }
 }
