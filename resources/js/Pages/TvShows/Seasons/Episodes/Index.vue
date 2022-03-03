@@ -1,41 +1,42 @@
 <template>
     <admin-layout title="Dashboard">
-        <template #header>
-                Tv Show Index
-        </template>
-        <div class="py-12">
+        <template #header> Episodes Index </template>
+
+        <div class="py-2">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <section class="container mx-auto p-6 font-mono">
                     <div class="w-full flex mb-4 p-2 justify-end">
- <form
+                        <form
                             class="flex space-x-4 shadow bg-white rounded-md m-2 p-2"
                         >
                             <div class="p-1 flex items-center">
                                 <label
                                     for="tmdb_id_g"
                                     class="block text-sm font-medium text-gray-700 mr-4"
-                                    >tvShow Tmdb Id</label
+                                    >Episode Nr</label
                                 >
                                 <div class="relative rounded-md shadow-sm">
                                     <input
-                                        v-model="tvShowTMDBId"
+                                        v-model="episodeNumber"
                                         id="tmdb_id_g"
                                         name="tmdb_id_g"
                                         class="px-3 py-2 border border-gray-300 rounded"
-                                        placeholder="Cast ID"
+                                        placeholder="Episode Nr"
                                     />
                                 </div>
                             </div>
                             <div class="p-1">
                                 <button
                                     type="button"
-                                    @click="generateTvShow"
+                                    @click="generateEpisode"
                                     class="inline-flex items-center justify-center py-2 px-4 border border-transparent text-base leading-6 font-medium rounded-md text-white bg-green-600 hover:bg-green-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-green-700 transition duration-150 ease-in-out disabled:opacity-50"
                                 >
                                     <span>Generate</span>
                                 </button>
                             </div>
-                        </form>                    </div>
+                        </form>
+                    </div>
+
                     <div
                         class="w-full mb-8 overflow-hidden bg-white rounded-lg shadow-lg"
                     >
@@ -69,7 +70,7 @@
                                 <div class="flex">
                                     <select
                                         v-model="perPage"
-                                        @change="getTvShows"
+                                        @change="getEpisodes"
                                         class="px-4 py-3 w-full rounded-md bg-gray-100 border-transparent focus:border-gray-500 focus:bg-white focus:ring-0 text-sm"
                                     >
                                         <option value="5">5 Per Page</option>
@@ -85,44 +86,58 @@
                                 <template #tableHead>
                                     <TableHead>Name</TableHead>
                                     <TableHead>Slug</TableHead>
-                                    <TableHead>Poster</TableHead>
+                                    <TableHead>Episode Nr</TableHead>
+                                    <TableHead>Public</TableHead>
                                     <TableHead>Manage</TableHead>
                                 </template>
                                 <TableRow
-                                    v-for="tvShow in tvShows.data"
-                                    :key="tvShow.id"
+                                    v-for="episode in episodes.data"
+                                    :key="episode.id"
                                 >
-                                    <TableData>{{ tvShow.name }}</TableData>
-                                    <TableData>{{ tvShow.slug }}</TableData>
-                                    <TableData>{{ tvShow.poster_path }}</TableData>
+                                    <TableData>{{ episode.name }}</TableData>
+                                    <TableData>{{ episode.slug }}</TableData>
+                                    <TableData>{{
+                                        episode.episode_number
+                                    }}</TableData>
+                                    <TableData>
+                                        <span
+                                            v-if="episode.is_public"
+                                            class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800"
+                                        >
+                                            Published
+                                        </span>
+                                        <span
+                                            v-else
+                                            class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800"
+                                        >
+                                            UnPublished
+                                        </span>
+                                    </TableData>
                                     <TableData>
                                         <div class="flex justify-around">
-                                            <ButtonLink class="bg-blue-500 hover:bg-blue-700"
+                                            <ButtonLink
                                                 :link="
                                                     route(
-                                                        'admin.seasons.index',
-                                                        tvShow.id
-                                                    )
-                                                "
-                                                >Seasons</ButtonLink
-                                                
-                                            >
-                                             <ButtonLink
-                                                :link="
-                                                    route(
-                                                        'admin.tv-shows.edit',
-                                                        tvShow.id
+                                                        'admin.episodes.edit',
+                                                        [
+                                                            tvShow.id,
+                                                            season.id,
+                                                            episode.id,
+                                                        ]
                                                     )
                                                 "
                                                 >Edit</ButtonLink
-                                                
                                             >
                                             <ButtonLink
                                                 class="bg-red-500 hover:bg-red-700"
                                                 :link="
                                                     route(
-                                                        'admin.tv-shows.destroy',
-                                                        tvShow.id
+                                                        'admin.episodes.destroy',
+                                                        [
+                                                            tvShow.id,
+                                                            season.id,
+                                                            episode.id,
+                                                        ]
                                                     )
                                                 "
                                                 method="delete"
@@ -134,8 +149,8 @@
                                     </TableData>
                                 </TableRow>
                             </Table>
-                            <div class="m-2 p-2" >
-                                <Pagination :links="tvShows.links" />
+                            <div class="m-2 p-2">
+                                <Pagination :links="episodes.links" />
                             </div>
                         </div>
                     </div>
@@ -146,27 +161,31 @@
 </template>
 
 <script setup>
-import AdminLayout from "@/Layouts/AdminLayout";
+import AdminLayout from "@/Layouts/AdminLayout.vue";
 import { Link } from "@inertiajs/inertia-vue3";
-import Pagination from "@/Components/Pagination";
-import { ref, watch, defineProps } from "vue";
+import Pagination from "@/Components/Pagination.vue";
+import { ref, watch } from "vue";
 import { Inertia } from "@inertiajs/inertia";
-import Table from "@/Components/Table.vue";
-import TableRow from "@/Components/TableRow";
-import TableHead from "@/Components/TableHead";
+import Table from "@/Components/Table";
 import TableData from "@/Components/TableData";
+import TableHead from "@/Components/TableHead";
+import TableRow from "@/Components/TableRow";
 import ButtonLink from "@/Components/ButtonLink";
 
 const props = defineProps({
-    tvShows: Object,
+    tvShow: Object,
+    season: Object,
     filters: Object,
+    episodes: Object,
 });
+
 const search = ref(props.filters.search);
 const perPage = ref(props.filters.perPage);
-const tvShowTMDBId=ref("");
+const episodeNumber = ref("");
+
 watch(search, (value) => {
     Inertia.get(
-        "/admin/tv-shows",
+        `/admin/tv-shows/${props.tvShow.id}/seasons/${props.season.id}/episodes`,
         { search: value, perPage: perPage.value },
         {
             preserveState: true,
@@ -174,9 +193,10 @@ watch(search, (value) => {
         }
     );
 });
-function getTvShows() {
+
+function getEpisodes() {
     Inertia.get(
-        "/admin/tv-shows",
+        `/admin/tv-shows/${props.tvShow.id}/seasons/${props.season.id}/episodes`,
         { perPage: perPage.value, search: search.value },
         {
             preserveState: true,
@@ -184,11 +204,14 @@ function getTvShows() {
         }
     );
 }
-function generateTvShow() {
-    Inertia.post("/admin/tv-shows", { tvShowTMDBId: tvShowTMDBId.value },{
-        onFinish: ()=>(tvShowTMDBId.value=""),
-    }
+
+function generateEpisode() {
+    Inertia.post(
+        `/admin/tv-shows/${props.tvShow.id}/seasons/${props.season.id}/episodes`,
+        { episodeNumber: episodeNumber.value },
+        {
+            onFinish: () => (episodeNumber.value = ""),
+        }
     );
 }
-
 </script>

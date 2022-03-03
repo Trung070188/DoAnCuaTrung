@@ -6,18 +6,17 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
-class Season extends Model
+class TvShow extends Model
 {
     use HasFactory;
-    protected $fillable = ['tmdb_id', 'name', 'slug', 'poster_path', 'tv_show_id', 'season_number'];
-
+    protected $fillable = ['tmdb_id', 'name', 'slug', 'poster_path', 'created_year'];
     public function setNameAttribute($value)
     {
         $this->attributes['name'] = $value;
         $this->attributes['slug'] = Str::slug($value);
     }
-    public function episodes()
+    public function seasons()
     {
-        return $this->hasMany(Episode::class);
+        return $this->hasMany(Season::class);
     }
 }

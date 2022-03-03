@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Serie;
+use App\Models\TvShow;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Http;
@@ -17,7 +17,7 @@ class TvShowController extends Controller
         $perPage = Request::input('perPage')  ?: 5;
 
         return Inertia::render('TvShows/Index', [
-            'tvShows' => Serie::query()
+            'tvShows' => TvShow::query()
                 ->when(Request::input('search'), function ($query, $search) {
                     $query->where('name', 'like', "%{$search}%");
                 })
@@ -28,13 +28,13 @@ class TvShowController extends Controller
     }
     public function store()
     {
-        $tvShow = Serie::where('tmdb_id', Request::input('tvShowTMDBId'))->first();
+        $tvShow = TvShow::where('tmdb_id', Request::input('tvShowTMDBId'))->first();
         if ($tvShow) {
             return Redirect::back()->with('flash.banner', 'Tv Show Exists.');
         }
-        $tmdb_tv = Http::get(config('services.tmdb.endpoint') . 'tv/' . Request::input('tvShowTMDBId') . '?api_key=' . config('services.tmdb.secret'));
+        $tmdb_tv = Http::asJson()->get(config('services.tmdb.endpoint') . 'tv/' . Request::input('tvShowTMDBId') . '?api_key=' . config('services.tmdb.secret'));
         if ($tmdb_tv->successful()) {
-            Serie::create([
+            TvShow::create([
                 'tmdb_id' => $tmdb_tv['id'],
                 'name' => $tmdb_tv['name'],
                 'poster_path' => $tmdb_tv['poster_path'],
@@ -45,11 +45,11 @@ class TvShowController extends Controller
             return Redirect::back()->with('flash.banner', 'Api Error.');
         }
     }
-    public function edit(Serie $tvShow)
+    public function edit(TvShow $tvShow)
     {
         return Inertia::render('TvShows/Edit',['tvShow'=>$tvShow]);
     }
-    public function update(Serie $tvShow)
+    public function update(TvShow $tvShow)
     {
         $validated=Request::validate([
             'name'=>'required',
@@ -59,7 +59,7 @@ class TvShowController extends Controller
         return Redirect::route('admin.tv-shows.index')->with('flash.banner', 'TvShow updated.');
 
     }
-    public function destroy(Serie $tvShow)
+    public function destroy(TvShow $tvShow)
     {
         $tvShow->delete();
         return Redirect::route('admin.tv-shows.index')->with('flash.banner', 'TvShow deleted.')->with('flash.bannerStyle','danger');
