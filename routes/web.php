@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\MovieController;
 use App\Http\Controllers\Admin\SeasonController;
 use App\Http\Controllers\Admin\TagController;
 use App\Http\Controllers\Admin\TvShowController;
+use App\Http\Controllers\Admin\MovieAttachController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -35,6 +36,17 @@ Route::middleware(['auth:sanctum', 'verified', 'role:admin'])->prefix('admin')->
         return Inertia::render('Admin/Index');
     })->name('index');
     Route::resource('/movies', MovieController::class);
+    Route::get('/movies/{movie}/attach', [MovieAttachController::class, 'index'])->name('movies.attach');
+    Route::post('/movies/{movie}/add-trailer', [MovieAttachController::class, 'addTrailer'])->name(
+        'movies.add.trailer'
+    );
+    Route::post('/movies/{movie}/add-casts', [MovieAttachController::class, 'addCast'])->name(
+        'movies.add.casts'
+    );
+    Route::post('/movies/{movie}/add-tags', [MovieAttachController::class, 'addTag'])->name(
+        'movies.add.tags'
+    );
+    Route::delete('/trailer-urls/{trailer_url}', [MovieAttachController::class, 'destroyTrailer'])->name('trailers.destroy');
     Route::resource('/tv-shows', TvShowController::class);
     Route::resource('/tv-shows/{tv_show}/seasons', SeasonController::class);
     Route::resource('/tv-shows/{tv_show}/seasons/{season}/episodes', EpisodeController::class);

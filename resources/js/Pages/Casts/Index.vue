@@ -95,7 +95,12 @@
                                 <TableRow v-for="cast in casts.data" :key="cast.id">
                                     <TableData>{{cast.name}}</TableData>
                                     <TableData>{{cast.slug}}</TableData>
-                                    <TableData>{{cast.poster_path}}</TableData>
+                                     <TableData>
+                                        <img
+                                            class="h-12 w-12 rounded"
+                                            :src="`https://www.themoviedb.org/t/p/w220_and_h330_face/${cast.poster_path}`"
+                                        />
+                                    </TableData>
                                     <TableData>
                                         <div class="flex justify-around">
                                             <ButtonLink :link="route('admin.casts.edit',cast.id)">Edit</ButtonLink>
