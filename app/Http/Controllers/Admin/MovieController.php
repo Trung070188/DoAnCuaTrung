@@ -36,7 +36,7 @@ class MovieController extends Controller
             return Redirect::back()->with('flash.banner', 'Movie Exists.');
         }
 
-        $apiMovie = Http::asJson()->get(config('services.tmdb.endpoint').'movie/'. Request::input('movieTMDBId'). '?api_key=' . config('services.tmdb.secret') . '&language=en-US');
+        $apiMovie = Http::asJson()->get(config('services.tmdb.endpoint').'movie/'. Request::input('movieTMDBId'). '?api_key=' . config('services.tmdb.secret') . '&language=vi-VN');
 
         if ($apiMovie->successful()) {
 

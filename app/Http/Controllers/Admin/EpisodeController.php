@@ -35,7 +35,7 @@ class EpisodeController extends Controller
         if ($episode) {
             return Redirect::back()->with('flash.banner', 'Episode Exists.');
         }
-        $tmdb_episode = Http::asJson()->get(config('services.tmdb.endpoint') . 'tv/' . $tvShow->tmdb_id . '/season/' . $season->season_number . '/episode/'. Request::input('episodeNumber') . '?api_key=' . config('services.tmdb.secret') . '&language=en-US');
+        $tmdb_episode = Http::asJson()->get(config('services.tmdb.endpoint') . 'tv/' . $tvShow->tmdb_id . '/season/' . $season->season_number . '/episode/'. Request::input('episodeNumber') . '?api_key=' . config('services.tmdb.secret') . '&language=vi-VN');
 
         if ($tmdb_episode->successful()) {
             Episode::create([

@@ -36,7 +36,7 @@ class SeasonController extends Controller
             return Redirect::back()->with('flash.banner', 'Season Exists.');
         }
 
-        $tmdb_season = Http::asJson()->get(config('services.tmdb.endpoint') . 'tv/'.$tvShow->tmdb_id . '/season/' . Request::input('seasonNumber') . '?api_key=' . config('services.tmdb.secret') . '&language=en-US');
+        $tmdb_season = Http::asJson()->get(config('services.tmdb.endpoint') . 'tv/'.$tvShow->tmdb_id . '/season/' . Request::input('seasonNumber') . '?api_key=' . config('services.tmdb.secret') . '&language=vi-VN');
         
         if ($tmdb_season->successful()) {
             Season::create([
