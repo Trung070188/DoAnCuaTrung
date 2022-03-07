@@ -48,7 +48,7 @@ class MovieController extends Controller
                 'release_date' => $apiMovie['release_date'],
                 'lang' => $apiMovie['original_language'],
                 'video_format' => 'HD',
-                'is_public' => false,
+                'is_public' => true,
                 'overview' => $apiMovie['overview'],
                 'poster_path' => $apiMovie['poster_path'],
                 'backdrop_path' => $apiMovie['backdrop_path']

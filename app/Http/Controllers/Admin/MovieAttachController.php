@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Cast;
 use App\Models\Movie;
 use App\Models\Tag;
+use App\Models\Download;
 use App\Models\TrailerUrl;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Request;
@@ -20,6 +21,7 @@ class MovieAttachController extends Controller
         return Inertia::render('Movies/Attach', [
             'movie' => $movie,
             'trailers' => $movie->trailers,
+            'downloads'=>$movie->downloads,
             'casts' => Cast::all('id', 'name'),
             'tags' => Tag::all('id', 'tag_name'),
             'movieCasts' => $movie->casts,
@@ -34,10 +36,23 @@ class MovieAttachController extends Controller
         ]));
         return Redirect::back()->with('flash.banner', 'Trailer Added.');
     }
+    public function addDownload(Movie $movie)
+    {
+        $movie->downloads()->create(Request::validate([
+            'name'    => 'required',
+            'web_url' => 'required'
+        ]));
+        return Redirect::back()->with('flash.banner', 'Download Added.');
+    }
     public function destroyTrailer(TrailerUrl $trailerUrl)
     {
         $trailerUrl->delete();
         return Redirect::back()->with('flash.banner', 'Trailer deleted.');
+    }
+    public function destroyDownload(Download $download)
+    {
+        $download->delete();
+        return Redirect::back()->with('flash.banner', 'Download deleted.');
     }
     public function addCast(Movie $movie)
     {

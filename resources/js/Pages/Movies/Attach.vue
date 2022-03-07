@@ -82,7 +82,79 @@
                             </div>
                         </form>
                     </div>
+                    <div
+                        class="w-full mb-8 sm:max-w-md p-6 overflow-hidden bg-white rounded-lg shadow-lg"
+                    >
+                        <div class="flex space-x-2">
+                            <div
+                                v-for="download in downloads"
+                                :key="download.id"
+                            >
+                                <Link
+                                    class="px-4 py-2 bg-red-500 hover:bg-red-700 rounded"
+                                    :href="
+                                        route(
+                                            'admin.downloads.destroy',
+                                            download.id
+                                        )
+                                    "
+                                    method="delete"
+                                    as="button"
+                                    type="button"
+                                >
+                                    {{ download.name }}
+                                </Link>
+                            </div>
+                        </div>
+                        <form @submit.prevent="submitDownload">
+                            <div>
+                                <jet-label for="name" value="Name" />
+                                <jet-input
+                                    id="name"
+                                    type="text"
+                                    class="mt-1 block w-full"
+                                    v-model="formDownload.name"
+                                    autofocus
+                                    autocomplete="name"
+                                />
+                                <div
+                                    class="text-sm text-red-400"
+                                    v-if="formDownload.errors.name"
+                                >
+                                    {{ formDownload.errors.name }}
+                                </div>
+                            </div>
 
+                            <div class="mt-4">
+                                <jet-label for="web_url" value="Url" />
+                                <input
+                                    id="web_url"
+                                    type="text"
+                                    class="mt-1 block w-full"
+                                    v-model="formDownload.web_url"
+                                />
+
+                                <div
+                                    class="text-sm text-red-400"
+                                    v-if="formDownload.errors.web_url"
+                                >
+                                    {{ formDownload.errors.web_url }}
+                                </div>
+                            </div>
+
+                            <div class="flex items-center justify-end mt-4">
+                                <jet-button
+                                    class="ml-4"
+                                    :class="{
+                                        'opacity-25': formDownload.processing,
+                                    }"
+                                    :disabled="formDownload.processing"
+                                >
+                                    add download
+                                </jet-button>
+                            </div>
+                        </form>
+                    </div>
                     <div
                         class="w-full mb-8 sm:max-w-md p-6 bg-white rounded-lg shadow-lg"
                     >
@@ -104,19 +176,18 @@
                                     :close-on-select="false"
                                     :clear-on-select="false"
                                     :preserve-search="true"
-                                    placeholder="Add Cast"
+                                    placeholder="Add Casts"
                                     label="name"
                                     track-by="name"
                                 ></multiselect>
                                 <div class="mt-2">
-                                    <JetButton>add Cast</JetButton>
+                                    <JetButton>add casts</JetButton>
                                 </div>
                             </form>
                         </div>
                     </div>
-
                     <div
-                        class="w-full mb-8 sm:max-w-md p-6  bg-white rounded-lg shadow-lg"
+                        class="w-full mb-8 sm:max-w-md p-6 bg-white rounded-lg shadow-lg"
                     >
                         <div>
                             <div class="flex">
@@ -136,7 +207,7 @@
                                     :close-on-select="false"
                                     :clear-on-select="false"
                                     :preserve-search="true"
-                                    placeholder="Add Tags"
+                                    placeholder="Add tags"
                                     label="tag_name"
                                     track-by="tag_name"
                                 ></multiselect>
@@ -161,21 +232,27 @@ import JetInput from "@/Jetstream/Input.vue";
 import JetLabel from "@/Jetstream/Label.vue";
 import JetCheckbox from "@/Jetstream/Checkbox.vue";
 import Multiselect from "vue-multiselect";
+
 const props = defineProps({
     movie: Object,
     trailers: Array,
+    downloads: Array,
     casts: Array,
     tags: Array,
     movieTags: Array,
     movieCasts: Array,
 });
-const value = ref();
-const options = ["list", "of", "options"];
 
 const form = useForm({
     name: "",
     embed_html: "",
 });
+
+const formDownload = useForm({
+    name: "",
+    web_url: "",
+});
+
 const castForm = useForm({
     casts: props.movieCasts,
 });
@@ -188,6 +265,13 @@ function submitTrailer() {
         onSuccess: () => form.reset(),
     });
 }
+
+function submitDownload() {
+    formDownload.post(`/admin/movies/${props.movie.id}/add-download`, {
+        onSuccess: () => formDownload.reset(),
+    });
+}
+
 function addCast() {
     castForm.post(`/admin/movies/${props.movie.id}/add-casts`, {
         preserveState: true,
@@ -195,11 +279,12 @@ function addCast() {
     });
 }
 function addTag() {
-  tagForm.post(`/admin/movies/${props.movie.id}/add-tags`, {
-    preserveState: true,
-    preserveScroll: true,
-  });
+    tagForm.post(`/admin/movies/${props.movie.id}/add-tags`, {
+        preserveState: true,
+        preserveScroll: true,
+    });
 }
 </script>
 <style src="vue-multiselect/dist/vue-multiselect.css"></style>
+
 <style></style>

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateCastsTable extends Migration
+class CreateDownloadsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,12 @@ class CreateCastsTable extends Migration
      */
     public function up()
     {
-        Schema::create('casts', function (Blueprint $table) {
+        Schema::create('downloads', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('tmdb_id')->unique();
             $table->string('name');
-            $table->string('slug');
-            $table->string('poster_path');
-            $table->text('overview');
+            $table->text('web_url');
+            $table->integer('downloadable_id');
+            $table->string('downloadable_type');
             $table->timestamps();
         });
     }
@@ -31,6 +30,6 @@ class CreateCastsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('casts');
+        Schema::dropIfExists('downloads');
     }
 }

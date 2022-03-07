@@ -36,7 +36,7 @@ class CastController extends Controller
         if ($cast) {
             return Redirect::back()->with('flash.banner', 'Cast Exists.');
         }
-        $tmdb_cast = Http::get(config('services.tmdb.endpoint') . 'person/' . Request::input('castTMDBId') . '?api_key=' . config('services.tmdb.secret'));
+        $tmdb_cast = Http::get(config('services.tmdb.endpoint') . 'person/' . Request::input('castTMDBId') . '?api_key=' . config('services.tmdb.secret').'&language=vi-VN');
         if ($tmdb_cast->successful()) {
             Cast::create([
                 'tmdb_id' => $tmdb_cast['id'],

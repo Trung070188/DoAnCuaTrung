@@ -30,7 +30,7 @@ class GenreController extends Controller
     }
     public function store()
     {
-        $tmdb_genres = Http::get(config('services.tmdb.endpoint') . 'genre/movie/list?api_key=' . config('services.tmdb.secret'));
+        $tmdb_genres = Http::get(config('services.tmdb.endpoint') . 'genre/movie/list?api_key=' . config('services.tmdb.secret').'&language=vi-VN');
         if ($tmdb_genres->successful()) {
             $tmdb_genres_json = $tmdb_genres->json();
             foreach ($tmdb_genres_json as $single_tmdb_genre) {

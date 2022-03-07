@@ -32,7 +32,7 @@ class TvShowController extends Controller
         if ($tvShow) {
             return Redirect::back()->with('flash.banner', 'Tv Show Exists.');
         }
-        $tmdb_tv = Http::asJson()->get(config('services.tmdb.endpoint') . 'tv/' . Request::input('tvShowTMDBId') . '?api_key=' . config('services.tmdb.secret'));
+        $tmdb_tv = Http::asJson()->get(config('services.tmdb.endpoint') . 'tv/' . Request::input('tvShowTMDBId') . '?api_key=' . config('services.tmdb.secret').'&language=vi-VN');
         if ($tmdb_tv->successful()) {
             TvShow::create([
                 'tmdb_id' => $tmdb_tv['id'],

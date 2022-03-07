@@ -23,11 +23,11 @@
                                         :src="`https://www.themoviedb.org/t/p/w220_and_h330_face/${movie.poster_path}`"
                                     />
                                 </div>
-                                <div
+                                <!-- <div
                                     class="absolute x-10 left-2 top-2 h-6 w-12 bg-gray-800 group-hover:bg-gray-700 text-blue-400 text-center rounded"
                                 >
                                     New
-                                </div>
+                                </div> -->
                                 <div
                                     class="absolute inset-0 z-10 bg-gradient-to-t from-black to-transparent"
                                 ></div>
@@ -94,11 +94,11 @@
                                         :src="`https://www.themoviedb.org/t/p/w220_and_h330_face/${episode.season.poster_path}`"
                                     />
                                 </div>
-                                <div
+                                <!-- <div
                                     class="absolute x-10 left-2 top-2 h-6 w-12 bg-gray-800 group-hover:bg-gray-700 text-blue-400 text-center rounded"
                                 >
                                     New
-                                </div>
+                                </div> -->
                                 <div
                                     class="absolute inset-0 z-10 bg-gradient-to-t from-black to-transparent"
                                 ></div>
@@ -155,11 +155,11 @@
                                         :src="`https://www.themoviedb.org/t/p/w220_and_h330_face/${tvShow.poster_path}`"
                                     />
                                 </div>
-                                <div
+                                <!-- <div
                                     class="absolute x-10 left-2 top-2 h-6 w-12 bg-gray-800 group-hover:bg-gray-700 text-blue-400 text-center rounded"
                                 >
                                     New
-                                </div>
+                                </div> -->
                                 <div
                                     class="absolute inset-0 z-10 bg-gradient-to-t from-black to-transparent"
                                 ></div>

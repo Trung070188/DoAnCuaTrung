@@ -18,6 +18,12 @@ class CastController extends Controller
     }
     public function show(Cast $cast)
     {
+        $movies = $cast->movies;
+
+        return Inertia::render('Frontend/Casts/Show', [
+            'cast' => $cast,
+            'movies' => $movies,
+        ]);
 
     }
 }

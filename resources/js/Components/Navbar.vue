@@ -135,6 +135,7 @@
 import { ref } from "vue";
 import { Link } from "@inertiajs/inertia-vue3";
 import Dropdown from "./Dropdown.vue";
+import SearchModal from "./SearchModal.vue";
 const open = ref(false);
 const openMobileMenu = ref(false);
 </script>
